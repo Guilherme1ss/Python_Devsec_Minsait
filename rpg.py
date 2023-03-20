@@ -1,9 +1,9 @@
 class Sistema:
-    def get_nome(obj): # Função que verifica se a classe tem o atributo 'nome'
-        if hasattr(obj, 'nome'):
-            return obj.nome
+    def get_nome(self): # Função que verifica se a classe tem o atributo 'nome'
+        if hasattr(self, 'nome'):
+            return self.nome
         else:
-            return obj.__class__.__name__
+            return self.__class__.__name__
         
     def resultado(self, alvo):
         if alvo.pontos_vida > 0:  # Verifica se o alvo ainda está vivo após o ataque
