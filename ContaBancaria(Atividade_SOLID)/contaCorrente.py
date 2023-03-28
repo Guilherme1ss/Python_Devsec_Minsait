@@ -15,29 +15,42 @@ class ContaCorrente(Conta, Banco):
         self.banco.cadastrar_conta_corrente(conta= self, nome= nome_do_usuario, tipo= 'Conta Corrente')
         
     
-    def sacar(self, valor: float) -> bool:
-        if self.pode_sacar(valor):
-            if self.saldo >= valor:
-                self.saldo -= valor
-                self.exibir_saque(valor= valor)
-                self.extrato.append(f"Saque de {locale.currency(valor, grouping=True)}")
-            elif self.saldo + self.limite_atual >= valor:
-                self.saldo -= valor
-                self.limite_atual += self.saldo
-                self.exibir_saque(valor= valor)
-                self.extrato.append(f"Saque de {locale.currency(valor, grouping=True)}")
-            elif self.limite_atual >= valor:
-                self.saldo -= valor
-                self.limite_atual -= valor
-                self.exibir_saque(valor= valor)
-                self.extrato.append(f"Saque de {locale.currency(valor, grouping=True)}")
+    def gerenciador_de_caso(self, valor):
+        if self.saldo >= valor:
+            self.caso = 1
+            return self.caso
+        elif self.saldo + self.limite_atual >= valor:
+            self.caso = 2
+            return self.caso
+        elif self.limite_atual >= valor:
+            self.caso = 3
+            return self.caso
+        else:
+            self.caso = 4
+            return self.caso
+
+    def sacar(self, valor):
+        self.caso = self.gerenciador_de_caso(valor)
+        if self.caso == 1:
+            self.saldo -= valor
+            self.exibir_saque(valor=valor)
+            self.extrato.append(f"Saque de {locale.currency(valor, grouping=True)}")
+            return True
+        elif self.caso == 2:
+            self.saldo -= valor
+            self.limite_atual += self.saldo
+            self.exibir_saque(valor=valor)
+            self.extrato.append(f"Saque de {locale.currency(valor, grouping=True)}")
+            return True
+        elif self.caso == 3:
+            self.saldo -= valor
+            self.limite_atual -= valor
+            self.exibir_saque(valor=valor)
+            self.extrato.append(f"Saque de {locale.currency(valor, grouping=True)}")
             return True
         else:
             self.__saldo_insuficiente(valor)
             return False
-        
-    def pode_sacar(self, valor: float) -> bool:
-        return self.saldo >= valor or self.saldo + self.limite_atual >= valor or self.limite_atual >= valor
     
     def exibir_saque(self, valor):
         print("---------------------------------------------------------------")
@@ -57,10 +70,11 @@ class ContaCorrente(Conta, Banco):
     def exibir_extrato(self):
         print("---------------------------------------------------------------")
         print('EXTRATO:\n')
-        for indice, elemento in enumerate(sorted(self.extrato)):
+        for indice, elemento in enumerate(self.extrato):
             print(indice + 1,'-', elemento)
         print(f'\nSaldo atual: {locale.currency(self.saldo, grouping=True)}')
         print("---------------------------------------------------------------")
+
     
     def depositar(self, valor: float) -> None:
         if self.saldo < 0:
