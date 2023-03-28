@@ -2,13 +2,13 @@ from conta import Conta
 from banco import Banco
 
 class ContaCorrente(Conta, Banco):
-    def __init__(self, id_conta: int, saldo: float, limite: float, banco: Banco):
+    def __init__(self, id_conta: int, saldo: float, limite: float, banco: Banco, nome_do_usuario: str):
         super().__init__(id_conta, saldo)
         self.limite = limite
         self.limite_atual = limite
         self.extrato = []
         self.banco = banco
-        self.banco.cadastrar_conta(conta= self)
+        self.banco.cadastrar_conta_corrente(conta= self, nome= nome_do_usuario, tipo= 'Conta Corrente')
         
     
     def sacar(self, valor: float) -> bool:

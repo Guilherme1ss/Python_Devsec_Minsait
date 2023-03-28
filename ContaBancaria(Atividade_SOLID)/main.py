@@ -3,12 +3,13 @@ from contaCorrente import ContaCorrente
 from contaPoupanca import ContaPoupanca
 
 banco = Banco()
-conta_corrente1 = ContaCorrente(id_conta=9, saldo=4000, limite=50, banco= banco)
-conta_corrente2 = ContaCorrente(id_conta=6, saldo=1000, limite=50, banco= banco)
-
-banco.transferir_valor(id_conta_origem=6, id_conta_destino=9, valor=1000)
+conta_corrente1 = ContaCorrente(id_conta=3, saldo=4000, limite=50, banco= banco, nome_do_usuario= 'Guilherme')
+conta_corrente2 = ContaCorrente(id_conta=4, saldo=1000, limite=50, banco= banco, nome_do_usuario= 'Pedro')
 
 
+banco.transferir_valor(id_conta_origem=4, id_conta_destino=3, valor=1000)
+
+'''
 conta_corrente1.sacar(700)
 conta_corrente1.depositar(200)
 conta_corrente1.sacar(50)
@@ -25,3 +26,4 @@ poupanca.depositar(valor=1000, anos= 1)
 
 # Realizando um saque na conta poupança
 poupanca.sacar(250)
+'''
