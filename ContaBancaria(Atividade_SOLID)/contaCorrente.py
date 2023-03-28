@@ -1,5 +1,8 @@
 from conta import Conta
 from banco import Banco
+import locale
+
+locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
 class ContaCorrente(Conta, Banco):
     def __init__(self, id_conta: int, saldo: float, limite: float, banco: Banco, nome_do_usuario: str):
@@ -8,6 +11,7 @@ class ContaCorrente(Conta, Banco):
         self.limite_atual = limite
         self.extrato = []
         self.banco = banco
+        self.contas_corrente = banco.contas_corrente
         self.banco.cadastrar_conta_corrente(conta= self, nome= nome_do_usuario, tipo= 'Conta Corrente')
         
     
@@ -16,17 +20,17 @@ class ContaCorrente(Conta, Banco):
             if self.saldo >= valor:
                 self.saldo -= valor
                 self.exibir_saque(valor= valor)
-                self.extrato.append(f"Saque de R${valor:.2f}")
+                self.extrato.append(f"Saque de {locale.currency(valor, grouping=True)}")
             elif self.saldo + self.limite_atual >= valor:
                 self.saldo -= valor
                 self.limite_atual += self.saldo
                 self.exibir_saque(valor= valor)
-                self.extrato.append(f"Saque de R${valor:.2f}")
+                self.extrato.append(f"Saque de {locale.currency(valor, grouping=True)}")
             elif self.limite_atual >= valor:
                 self.saldo -= valor
                 self.limite_atual -= valor
                 self.exibir_saque(valor= valor)
-                self.extrato.append(f"Saque de R${valor:.2f}")
+                self.extrato.append(f"Saque de {locale.currency(valor, grouping=True)}")
             return True
         else:
             self.__saldo_insuficiente(valor)
@@ -37,17 +41,17 @@ class ContaCorrente(Conta, Banco):
     
     def exibir_saque(self, valor):
         print("---------------------------------------------------------------")
-        print(f"Você sacou R${valor:.2f}.\nO seu saldo atual da conta corrente é: R${self.saldo:.2f} + Limite da conta: R${self.limite_atual:.2f}")
+        print(f"Você sacou {locale.currency(valor, grouping=True)}.\nO seu saldo atual da conta corrente é: {locale.currency(self.saldo, grouping=True)} + Limite da conta: {locale.currency(self.limite_atual, grouping=True)}")
         print("---------------------------------------------------------------")
 
     def exibir_deposito(self, valor):
         print("---------------------------------------------------------------")
-        print(f"Você depositou R${valor:.2f}.\nO seu saldo atual da conta corrente é: R${self.saldo:.2f} + Limite da conta: R${self.limite_atual:.2f}")
+        print(f"Você depositou {locale.currency(valor, grouping=True)}\nO seu saldo atual da conta corrente é: {locale.currency(self.saldo, grouping=True)} + Limite da conta: {locale.currency(self.limite_atual, grouping=True)}")
         print("---------------------------------------------------------------")
 
     def __saldo_insuficiente(self, valor) -> None:
         print("---------------------------------------------------------------")
-        print(f"Saldo insuficiente.\nVocê não possui R${valor:.2f} em sua conta.\nSeu saldo atual é: R${self.saldo} + Limite: R${self.limite_atual:.2f}.")
+        print(f"Saldo insuficiente.\nVocê não possui {locale.currency(valor, grouping=True)} em sua conta.\nSeu saldo atual é: {locale.currency(self.saldo, grouping=True)} + Limite: {locale.currency(self.limite_atual, grouping=True)}.")
         print("---------------------------------------------------------------")
 
     def exibir_extrato(self):
@@ -55,7 +59,7 @@ class ContaCorrente(Conta, Banco):
         print('EXTRATO:\n')
         for indice, elemento in enumerate(sorted(self.extrato)):
             print(indice + 1,'-', elemento)
-        print(f'\nSaldo atual: R${self.saldo}')
+        print(f'\nSaldo atual: {locale.currency(self.saldo, grouping=True)}')
         print("---------------------------------------------------------------")
     
     def depositar(self, valor: float) -> None:
@@ -63,4 +67,7 @@ class ContaCorrente(Conta, Banco):
             self.limite_atual += abs(self.saldo)
         self.saldo += valor
         self.exibir_deposito(valor= valor)
-        self.extrato.append(f"Depósito de R${valor:.2f}")
+        self.extrato.append(f"Depósito de {locale.currency(valor, grouping=True)}")
+
+    def transferir(self, valor: float, id_conta_destino: int):
+        self.transferir_valor(id_conta_origem=self.id_conta, id_conta_destino= id_conta_destino, valor= valor)
