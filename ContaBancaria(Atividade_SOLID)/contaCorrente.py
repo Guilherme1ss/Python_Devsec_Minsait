@@ -26,7 +26,8 @@ class ContaCorrente(Conta, Banco):
         elif valor <= self.saldo + self.limite_atual:
             self.caso = 2
             return self.caso
-        elif valor <= self.limite_atual: # Caso o saldo seja negativo e ainda houver limite.
+        # Caso o saldo seja negativo e ainda houver limite.
+        elif valor <= self.limite_atual:
             self.caso = 3
             return self.caso
         else:
@@ -58,9 +59,9 @@ class ContaCorrente(Conta, Banco):
         else:
             self.__saldo_insuficiente(valor)
             return False
-        
 
         # Métodos de exibição
+
     def exibir_saque(self, valor):
         print("---------------------------------------------------------------")
         print(f"Você sacou {locale.currency(valor, grouping=True)}.\nO seu saldo atual da conta corrente é: {locale.currency(self.saldo, grouping=True)} + Limite da conta: {locale.currency(self.limite_atual, grouping=True)}")
@@ -85,16 +86,17 @@ class ContaCorrente(Conta, Banco):
         print(f'\nSaldo atual: {locale.currency(self.saldo, grouping=True)}')
         print("---------------------------------------------------------------")
 
-
-    def depositar(self, valor: float) -> None:
-        if self.saldo < 0:
+    def depositar(self, valor: float):
+        if self.saldo < 0 and self.saldo + valor >= 0:
             self.limite_atual += abs(self.saldo)
+        elif self.saldo + valor <= 0:
+            self.limite_atual += valor
         self.saldo += valor
         self.exibir_deposito(valor=valor)
         self.atualiza_extrato(valor=valor)
 
     # Adiciona novo valor ao extrato
-    def atualiza_extrato(self, valor= float):
+    def atualiza_extrato(self, valor=float):
         self.extrato.append(
             f"Depósito de {locale.currency(valor, grouping=True)}")
 

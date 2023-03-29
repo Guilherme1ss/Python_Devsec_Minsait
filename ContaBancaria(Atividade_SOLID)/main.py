@@ -32,7 +32,7 @@ conta_corrente1.depositar(200)
 conta_corrente1.sacar(5125)
 conta_corrente1.sacar(100)
 conta_corrente1.sacar(20)
-conta_corrente1.depositar(50)
+conta_corrente1.depositar(20)
 conta_corrente1.depositar(500)
 
 # Exibe o extrato da conta corrente.
