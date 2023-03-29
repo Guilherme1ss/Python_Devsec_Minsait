@@ -60,13 +60,14 @@ class ContaPoupanca(Conta, Banco):
         self.saldo += valor
         self.exibir_saldo()
 
-    # Calcula o tempo total (em segundo)
+    # Calcula o tempo total (em segundos)
     def calcular_tempo_total(self, segundos: int, minutos: int, horas: int, dias: int, meses: int, anos: int):
         self.media_dias_em_mes = 365/12
         self.total_dias = dias + meses*self.media_dias_em_mes + anos*365
         self.tempo_deposito = timedelta(
             seconds=segundos, minutes=minutos, hours=horas, days=self.total_dias)
 
+    # Calcula o rendimento com base no tempo total do deposito
     def calcular_rendimento(self, tempo_deposito: int, valor_para_calculo: float):
         self.anos = tempo_deposito / (365 * 24 * 60 * 60)
         self.taxa_juros_anual = self.taxa_juros_anual / 100
