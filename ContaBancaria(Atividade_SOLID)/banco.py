@@ -39,6 +39,7 @@ class Banco:
         nome_conta_destino = self.contas_corrente[id_conta_destino][1]
         return nome_conta_origem, nome_conta_destino
 
+    # Realiza transferência de uma conta para outra
     def transferir_valor(self, id_conta_origem, id_conta_destino, valor):
         conta_origem = self.buscar_conta_corrente_por_id(id_conta_origem)
         conta_destino = self.buscar_conta_corrente_por_id(id_conta_destino)
@@ -73,7 +74,7 @@ class Banco:
     def exibe_validacao_concluida(self, conta_id: int):
         print(f'Conta poupança vinculada a conta corrente de id {conta_id}')
 
-    # Método para sacar da conta poupança e depositar na conta corrente
+    # Método chamado ao realizar o saque da conta poupança. Ele deposita o valor sacado na conta corrente do titular.
     def sacar_poupança_corrente(self, id_poupanca, valor):
         conta_poupanca = self.buscar_conta_poupanca_por_id(id_poupanca)
         conta_corrente = self.buscar_conta_corrente_por_id(id_poupanca)
